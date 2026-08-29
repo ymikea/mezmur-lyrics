@@ -1,4 +1,6 @@
-export type Language = 'Amharic' | 'Tigrinya' | 'Geez' | 'Oromo' | 'English';
+export type Language = 'Tigrinya' | 'Geez' | 'Amharic' | 'English';
+
+export const LANGUAGES: Language[] = ['Tigrinya', 'Geez', 'Amharic','English'];
 
 export type LiturgicalSeason =
   | 'Fast of the Prophets'
@@ -10,6 +12,18 @@ export type LiturgicalSeason =
   | 'Pentecost'
   | 'Assumption'
   | 'General';
+
+export const LITURGICAL_SEASONS: LiturgicalSeason[] = [
+  'Fast of the Prophets',
+  'Nativity',
+  'Epiphany',
+  'Great Lent',
+  'Holy Week',
+  'Resurrection',
+  'Pentecost',
+  'Assumption',
+  'General',
+];
 
 export type ReviewStatus = 'pending_review' | 'approved' | 'rejected';
 export type AppRole = 'admin' | 'moderator';
@@ -23,7 +37,6 @@ export interface Stanza {
 export interface Mezmur {
   id: string;
   title: string;
-  artist: string;
   language: Language;
   liturgical_season: LiturgicalSeason;
   lyrics: Stanza[];

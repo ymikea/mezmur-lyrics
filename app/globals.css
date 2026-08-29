@@ -1,12 +1,28 @@
 :root {
-  --background: #ffffff;
+  --background: #fafafa;
   --foreground: #171717;
+  --surface: #ffffff;
+  --border: #e2e2e2;
+  --muted: #6b6b6b;
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --danger: #d92d20;
+  --danger-bg: #fef3f2;
+  --success-bg: #ecfdf3;
+  --success-fg: #067647;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --surface: #141414;
+    --border: #2a2a2a;
+    --muted: #a0a0a0;
+    --accent: #a78bfa;
+    --accent-hover: #c4b5fd;
+    --danger-bg: #2a1414;
+    --success-bg: #0e2116;
   }
 }
 
@@ -46,4 +62,354 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+/* ---------- Layout ---------- */
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+}
+
+.container--narrow {
+  max-width: 420px;
+}
+
+.library-layout {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.library-layout .container {
+  max-width: none;
+  margin: 0;
+  flex: 1;
+}
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  padding: 24px 12px;
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: 57px;
+  align-self: flex-start;
+}
+
+.sidebar__heading {
+  padding: 0 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.sidebar__links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar__link {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.sidebar__link:hover {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.sidebar__link--active {
+  background: var(--background);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .library-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+  }
+
+  .sidebar__links {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* ---------- Nav ---------- */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.nav__brand {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.2px;
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.nav__link {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.nav__link:hover {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.nav__link--active {
+  color: var(--foreground);
+  background: var(--background);
+}
+
+/* ---------- Typography ---------- */
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s, background-color 0.15s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--background);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn-danger {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: transparent;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--danger-bg);
+}
+
+/* ---------- Cards ---------- */
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--surface);
+}
+
+a.card {
+  display: block;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+a.card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+}
+
+.card + .card {
+  margin-top: 0;
+}
+
+.card-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.card__title {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.card__meta {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------- Badge ---------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.badge--approved {
+  background: var(--success-bg);
+  color: var(--success-fg);
+}
+
+.badge--pending_review {
+  background: #fff4e5;
+  color: #93670a;
+}
+
+.badge--rejected {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+/* ---------- Forms ---------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.input,
+select.input,
+textarea.input {
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+.input:focus,
+select.input:focus,
+textarea.input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* ---------- Banners ---------- */
+
+.banner {
+  margin-top: 16px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.banner--error {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.banner--info {
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+@media (prefers-color-scheme: dark) {
+  .banner--info {
+    background: #1e2247;
+    color: #c7d2fe;
+  }
+}
+
+/* ---------- Lyrics ---------- */
+
+.stanza {
+  padding: 12px 0;
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+
+.stanza + .stanza {
+  border-top: 1px dashed var(--border);
+}
+
+.stanza--chorus {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.stanza em {
+  font-style: italic;
+}
+
+.stanza em sup,
+.stanza strong sup {
+  margin-left: 1px;
+  color: var(--accent);
+  font-weight: 700;
 }

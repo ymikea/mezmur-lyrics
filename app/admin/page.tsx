@@ -13,7 +13,7 @@ export default async function AdminPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect('/');
+    redirect('/login?redirect=/admin&reason=login_required');
   }
 
   const { data: roleRow } = await supabase
@@ -23,7 +23,7 @@ export default async function AdminPage() {
     .maybeSingle();
 
   if (!roleRow || !['admin', 'moderator'].includes(roleRow.role)) {
-    redirect('/');
+    redirect('/?reason=unauthorized');
   }
 
   const { data } = await supabase
@@ -34,11 +34,11 @@ export default async function AdminPage() {
   const mezmurs = (data as Mezmur[]) || [];
 
   return (
-    <main style={{ padding: 24, maxWidth: 1000, margin: '0 auto' }}>
-      <h1>Admin Dashboard</h1>
-      <p style={{ marginTop: 8 }}>Review, approve, reject, or delete submitted mezmurs.</p>
+    <main className="container">
+      <h1 className="page-title">Admin Dashboard</h1>
+      <p className="page-subtitle">Review, approve, reject, or delete submitted mezmurs.</p>
       {mezmurs.length === 0 ? (
-        <p style={{ marginTop: 12 }}>No submissions yet.</p>
+        <p style={{ marginTop: 16 }}>No submissions yet.</p>
       ) : (
         <AdminTable mezmurs={mezmurs} canDelete={roleRow.role === 'admin'} />
       )}

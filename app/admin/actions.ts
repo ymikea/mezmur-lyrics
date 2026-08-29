@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/utils/supabase/server';
-import { ReviewStatus } from '@/types/database';
+import { Language, LiturgicalSeason, ReviewStatus, Stanza } from '@/types/database';
 
 const ensureStaff = async () => {
   const supabase = await createClient();
@@ -58,4 +58,28 @@ export async function deleteMezmur(id: string) {
 
   revalidatePath('/');
   revalidatePath('/admin');
+}
+
+export interface UpdateMezmurInput {
+  title: string;
+  language: Language;
+  liturgical_season: LiturgicalSeason;
+  lyrics: Stanza[];
+}
+
+export async function updateMezmur(id: string, input: UpdateMezmurInput) {
+  const { supabase } = await ensureStaff();
+
+  const { error } = await supabase
+    .from('mezmurs')
+    .update({ ...input, updated_at: new Date().toISOString() })
+    .eq('id', id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath('/');
+  revalidatePath('/admin');
+  revalidatePath(`/mezmur/${id}`);
 }

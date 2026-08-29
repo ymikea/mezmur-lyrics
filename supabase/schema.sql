@@ -15,7 +15,6 @@ CREATE TABLE public.user_roles (
 CREATE TABLE public.mezmurs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
-    artist TEXT NOT NULL,
     language mezmur_language NOT NULL,
     liturgical_season liturgical_season NOT NULL,
     lyrics JSONB NOT NULL DEFAULT '[]'::jsonb,

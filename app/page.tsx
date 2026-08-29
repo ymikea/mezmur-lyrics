@@ -1,15 +1,22 @@
 import Link from 'next/link';
-import { Mezmur } from '@/types/database';
+import { Mezmur, LiturgicalSeason } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
+import SeasonSidebar from '@/components/SeasonSidebar';
 
 export const revalidate = 60;
 
-export default async function PublicLibraryPage() {
+interface PublicLibraryPageProps {
+  searchParams: Promise<{ reason?: string; season?: LiturgicalSeason }>;
+}
+
+export default async function PublicLibraryPage({ searchParams }: PublicLibraryPageProps) {
+  const { reason, season } = await searchParams;
+
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return (
-      <main style={{ padding: 24, maxWidth: 900, margin: '0 auto' }}>
-        <h1>Mezmur Library</h1>
-        <p style={{ marginTop: 8 }}>
+      <main className="container">
+        <h1 className="page-title">Mezmur Library</h1>
+        <p className="page-subtitle">
           Configure Supabase environment variables to load approved mezmurs.
         </p>
       </main>
@@ -18,41 +25,41 @@ export default async function PublicLibraryPage() {
 
   const supabase = await createClient();
 
-  const { data: mezmurs } = await supabase
-    .from('mezmurs')
-    .select('*')
-    .order('created_at', { ascending: false });
+  let query = supabase.from('mezmurs').select('*').order('created_at', { ascending: false });
+  if (season) {
+    query = query.eq('liturgical_season', season);
+  }
+  const { data: mezmurs } = await query;
 
   const typedMezmurs = (mezmurs as Mezmur[]) || [];
 
   return (
-    <main style={{ padding: 24, maxWidth: 900, margin: '0 auto' }}>
-      <h1>Mezmur Library</h1>
-      <p style={{ marginTop: 8 }}>
-        Browse approved hymns, submit a new mezmur, or review submissions if you are staff.
-      </p>
+    <div className="library-layout">
+      <SeasonSidebar activeSeason={season} />
+      <main className="container">
+        <h1 className="page-title">Mezmur Library</h1>
+        <p className="page-subtitle">
+          Browse approved hymns, submit a new mezmur, or review submissions if you are staff.
+        </p>
 
-      <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
-        <Link href="/submit">Submit Mezmur</Link>
-        <Link href="/admin">Admin Dashboard</Link>
-      </div>
-
-      <section style={{ marginTop: 24, display: 'grid', gap: 12 }}>
-        {typedMezmurs.length === 0 ? (
-          <p>No approved mezmurs are available yet.</p>
-        ) : (
-          typedMezmurs.map((mezmur) => (
-            <article key={mezmur.id} style={{ border: '1px solid #ddd', borderRadius: 8, padding: 12 }}>
-              <h2>{mezmur.title}</h2>
-              <p>Artist: {mezmur.artist}</p>
-              <p>
-                Language: {mezmur.language} • Season: {mezmur.liturgical_season}
-              </p>
-              <p style={{ marginTop: 8 }}>Stanzas: {mezmur.lyrics?.length ?? 0}</p>
-            </article>
-          ))
+        {reason === 'unauthorized' && (
+          <p className="banner banner--error">
+            You do not have permission to access that page.
+          </p>
         )}
-      </section>
-    </main>
+
+        <section className="card-list">
+          {typedMezmurs.length === 0 ? (
+            <p>No approved mezmurs are available yet.</p>
+          ) : (
+            typedMezmurs.map((mezmur) => (
+              <Link key={mezmur.id} href={`/mezmur/${mezmur.id}`} className="card">
+                <h2 className="card__title">{mezmur.title}</h2>
+              </Link>
+            ))
+          )}
+        </section>
+      </main>
+    </div>
   );
 }
