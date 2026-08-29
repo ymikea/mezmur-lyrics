@@ -21,25 +21,26 @@ const SEASONS: LiturgicalSeason[] = [
 
 export default function SubmitPage() {
   const router = useRouter();
+  type EditableStanza = Stanza & { localId: string };
 
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
   const [language, setLanguage] = useState<Language>('Amharic');
   const [season, setSeason] = useState<LiturgicalSeason>('General');
-  const [stanzas, setStanzas] = useState<Stanza[]>([
-    { stanza_order: 1, text: '', is_chorus: false },
+  const [stanzas, setStanzas] = useState<EditableStanza[]>([
+    { localId: crypto.randomUUID(), stanza_order: 1, text: '', is_chorus: false },
   ]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const updateStanza = (index: number, stanza: Stanza) => {
+  const updateStanza = (index: number, stanza: EditableStanza) => {
     setStanzas((prev) => prev.map((item, i) => (i === index ? stanza : item)));
   };
 
   const addStanza = () => {
     setStanzas((prev) => [
       ...prev,
-      { stanza_order: prev.length + 1, text: '', is_chorus: false },
+      { localId: crypto.randomUUID(), stanza_order: prev.length + 1, text: '', is_chorus: false },
     ]);
   };
 
@@ -58,7 +59,11 @@ export default function SubmitPage() {
 
     const cleanStanzas = stanzas
       .filter((stanza) => stanza.text.trim().length > 0)
-      .map((stanza, index) => ({ ...stanza, stanza_order: index + 1 }));
+      .map((stanza, index) => ({
+        stanza_order: index + 1,
+        text: stanza.text,
+        is_chorus: stanza.is_chorus,
+      }));
 
     if (!title.trim() || !artist.trim() || cleanStanzas.length === 0) {
       setError('Title, artist, and at least one stanza are required.');
@@ -132,7 +137,7 @@ export default function SubmitPage() {
         <section style={{ display: 'grid', gap: 10 }}>
           <h2>Stanzas</h2>
           {stanzas.map((stanza, index) => (
-            <div key={index} style={{ border: '1px solid #ddd', borderRadius: 8, padding: 12 }}>
+            <div key={stanza.localId} style={{ border: '1px solid #ddd', borderRadius: 8, padding: 12 }}>
               <p>Stanza {index + 1}</p>
               <textarea
                 value={stanza.text}
