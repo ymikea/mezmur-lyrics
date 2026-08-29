@@ -3,6 +3,7 @@ import { Mezmur } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
 
 export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function PublicLibraryPage() {
   const supabase = await createClient();

@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { Language, LiturgicalSeason, Stanza } from '@/types/database';
 import { createClient } from '@/utils/supabase/client';
 
+export const dynamic = 'force-dynamic';
+
 const LANGUAGES: Language[] = ['Amharic', 'Tigrinya', 'Geez', 'Oromo', 'English'];
 const SEASONS: LiturgicalSeason[] = [
   'Fast of the Prophets',
@@ -20,7 +22,6 @@ const SEASONS: LiturgicalSeason[] = [
 ];
 
 export default function SubmitPage() {
-  const supabase = createClient();
   const router = useRouter();
 
   const [title, setTitle] = useState('');
@@ -55,6 +56,7 @@ export default function SubmitPage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
+    const supabase = createClient();
 
     const cleanStanzas = stanzas
       .filter((stanza) => stanza.text.trim().length > 0)

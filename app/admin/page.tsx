@@ -3,6 +3,8 @@ import { Mezmur } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
 import AdminTable from './AdminTable';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminPage() {
   const supabase = await createClient();
 
