@@ -1,0 +1,94 @@
+'use client';
+
+import { useState, useTransition } from 'react';
+import { Mezmur, ReviewStatus } from '@/types/database';
+import { deleteMezmur, updateMezmurStatus } from './actions';
+
+interface AdminTableProps {
+  mezmurs: Mezmur[];
+  canDelete: boolean;
+}
+
+const STATUSES: ReviewStatus[] = ['pending_review', 'approved', 'rejected'];
+
+export default function AdminTable({ mezmurs, canDelete }: AdminTableProps) {
+  const [isPending, startTransition] = useTransition();
+  const [message, setMessage] = useState('');
+  const [pendingRowId, setPendingRowId] = useState<string | null>(null);
+  const [statusById, setStatusById] = useState<Record<string, ReviewStatus>>(() =>
+    Object.fromEntries(mezmurs.map((mezmur) => [mezmur.id, mezmur.status])),
+  );
+
+  return (
+    <section style={{ marginTop: 16 }}>
+      {message && <p style={{ marginBottom: 8 }}>{message}</p>}
+      <div style={{ display: 'grid', gap: 12 }}>
+        {mezmurs.map((mezmur) => (
+          <article key={mezmur.id} style={{ border: '1px solid #ddd', borderRadius: 8, padding: 12 }}>
+            <h2>{mezmur.title}</h2>
+            <p>Artist: {mezmur.artist}</p>
+            <p>
+              {mezmur.language} • {mezmur.liturgical_season}
+            </p>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+              <label htmlFor={`status-${mezmur.id}`}>Status</label>
+              <select
+                id={`status-${mezmur.id}`}
+                value={statusById[mezmur.id] ?? mezmur.status}
+                disabled={isPending && pendingRowId === mezmur.id}
+                onChange={(event) => {
+                  const status = event.target.value as ReviewStatus;
+                  const previousStatus = statusById[mezmur.id] ?? mezmur.status;
+                  setStatusById((prev) => ({ ...prev, [mezmur.id]: status }));
+                  setPendingRowId(mezmur.id);
+                  startTransition(async () => {
+                    try {
+                      await updateMezmurStatus(mezmur.id, status);
+                      setMessage('Status updated.');
+                    } catch (error) {
+                      setStatusById((prev) => ({ ...prev, [mezmur.id]: previousStatus }));
+                      const text = error instanceof Error ? error.message : 'Failed to update status.';
+                      setMessage(text);
+                    } finally {
+                      setPendingRowId(null);
+                    }
+                  });
+                }}
+              >
+                {STATUSES.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+
+              {canDelete && (
+                <button
+                  type="button"
+                  disabled={isPending && pendingRowId === mezmur.id}
+                  onClick={() => {
+                    setPendingRowId(mezmur.id);
+                    startTransition(async () => {
+                      try {
+                        await deleteMezmur(mezmur.id);
+                        setMessage('Mezmur deleted.');
+                      } catch (error) {
+                        const text = error instanceof Error ? error.message : 'Failed to delete mezmur.';
+                        setMessage(text);
+                      } finally {
+                        setPendingRowId(null);
+                      }
+                    });
+                  }}
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
