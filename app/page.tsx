@@ -3,9 +3,19 @@ import { Mezmur } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
 
 export const revalidate = 60;
-export const dynamic = 'force-dynamic';
 
 export default async function PublicLibraryPage() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return (
+      <main style={{ padding: 24, maxWidth: 900, margin: '0 auto' }}>
+        <h1>Mezmur Library</h1>
+        <p style={{ marginTop: 8 }}>
+          Configure Supabase environment variables to load approved mezmurs.
+        </p>
+      </main>
+    );
+  }
+
   const supabase = await createClient();
 
   const { data: mezmurs } = await supabase

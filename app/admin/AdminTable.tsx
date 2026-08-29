@@ -14,6 +14,9 @@ const STATUSES: ReviewStatus[] = ['pending_review', 'approved', 'rejected'];
 export default function AdminTable({ mezmurs, canDelete }: AdminTableProps) {
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState('');
+  const [statusById, setStatusById] = useState<Record<string, ReviewStatus>>(() =>
+    Object.fromEntries(mezmurs.map((mezmur) => [mezmur.id, mezmur.status])),
+  );
 
   return (
     <section style={{ marginTop: 16 }}>
@@ -31,15 +34,18 @@ export default function AdminTable({ mezmurs, canDelete }: AdminTableProps) {
               <label htmlFor={`status-${mezmur.id}`}>Status</label>
               <select
                 id={`status-${mezmur.id}`}
-                defaultValue={mezmur.status}
+                value={statusById[mezmur.id] ?? mezmur.status}
                 disabled={pending}
                 onChange={(event) => {
                   const status = event.target.value as ReviewStatus;
+                  const previousStatus = statusById[mezmur.id] ?? mezmur.status;
+                  setStatusById((prev) => ({ ...prev, [mezmur.id]: status }));
                   startTransition(async () => {
                     try {
                       await updateMezmurStatus(mezmur.id, status);
                       setMessage('Status updated.');
                     } catch (error) {
+                      setStatusById((prev) => ({ ...prev, [mezmur.id]: previousStatus }));
                       const text = error instanceof Error ? error.message : 'Failed to update status.';
                       setMessage(text);
                     }

@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation';
 import { Language, LiturgicalSeason, Stanza } from '@/types/database';
 import { createClient } from '@/utils/supabase/client';
 
-export const dynamic = 'force-dynamic';
-
 const LANGUAGES: Language[] = ['Amharic', 'Tigrinya', 'Geez', 'Oromo', 'English'];
 const SEASONS: LiturgicalSeason[] = [
   'Fast of the Prophets',

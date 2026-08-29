@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# mezmur-lyrics
 
-## Getting Started
+Ethiopian Orthodox Tewahedo Hymn (Mezmur) lyrics management system with a Supabase backend and Next.js frontend.
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 20+
+- npm
+- A Supabase project
+
+## Environment variables
+
+Create `.env.local` in the repository root with:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Database setup (Supabase)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Open your Supabase project SQL Editor.
+2. Run `/home/runner/work/mezmur-lyrics/mezmur-lyrics/supabase/schema.sql`.
+3. Seed at least one admin role in `public.user_roles` using the Supabase user UUID:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```sql
+insert into public.user_roles (user_id, role)
+values ('<auth_user_uuid>', 'admin');
+```
 
-## Learn More
+## Run locally
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+App routes:
+- `/` public approved mezmur library
+- `/submit` public mezmur submission form
+- `/admin` protected review dashboard for admin/moderator
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Validation
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run lint
+npm run build
+```
