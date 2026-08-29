@@ -60,7 +60,8 @@ USING (auth.uid() = user_id);
 
 CREATE POLICY "Admins can manage user roles"
 ON public.user_roles FOR ALL
-USING (public.authorize('admin'));
+USING (public.authorize('admin'))
+WITH CHECK (public.authorize('admin'));
 
 -- Mezmurs Policies
 -- Public Select: Only approved records

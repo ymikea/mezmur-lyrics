@@ -20,7 +20,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ## Database setup (Supabase)
 
 1. Open your Supabase project SQL Editor.
-2. Run `/home/runner/work/mezmur-lyrics/mezmur-lyrics/supabase/schema.sql`.
+2. Run `supabase/schema.sql`.
 3. Seed at least one admin role in `public.user_roles` using the Supabase user UUID:
 
 ```sql

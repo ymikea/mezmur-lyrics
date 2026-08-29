@@ -12,8 +12,9 @@ interface AdminTableProps {
 const STATUSES: ReviewStatus[] = ['pending_review', 'approved', 'rejected'];
 
 export default function AdminTable({ mezmurs, canDelete }: AdminTableProps) {
-  const [pending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState('');
+  const [pendingRowId, setPendingRowId] = useState<string | null>(null);
   const [statusById, setStatusById] = useState<Record<string, ReviewStatus>>(() =>
     Object.fromEntries(mezmurs.map((mezmur) => [mezmur.id, mezmur.status])),
   );
@@ -35,11 +36,12 @@ export default function AdminTable({ mezmurs, canDelete }: AdminTableProps) {
               <select
                 id={`status-${mezmur.id}`}
                 value={statusById[mezmur.id] ?? mezmur.status}
-                disabled={pending}
+                disabled={isPending && pendingRowId === mezmur.id}
                 onChange={(event) => {
                   const status = event.target.value as ReviewStatus;
                   const previousStatus = statusById[mezmur.id] ?? mezmur.status;
                   setStatusById((prev) => ({ ...prev, [mezmur.id]: status }));
+                  setPendingRowId(mezmur.id);
                   startTransition(async () => {
                     try {
                       await updateMezmurStatus(mezmur.id, status);
@@ -48,6 +50,8 @@ export default function AdminTable({ mezmurs, canDelete }: AdminTableProps) {
                       setStatusById((prev) => ({ ...prev, [mezmur.id]: previousStatus }));
                       const text = error instanceof Error ? error.message : 'Failed to update status.';
                       setMessage(text);
+                    } finally {
+                      setPendingRowId(null);
                     }
                   });
                 }}
@@ -62,8 +66,9 @@ export default function AdminTable({ mezmurs, canDelete }: AdminTableProps) {
               {canDelete && (
                 <button
                   type="button"
-                  disabled={pending}
+                  disabled={isPending && pendingRowId === mezmur.id}
                   onClick={() => {
+                    setPendingRowId(mezmur.id);
                     startTransition(async () => {
                       try {
                         await deleteMezmur(mezmur.id);
@@ -71,6 +76,8 @@ export default function AdminTable({ mezmurs, canDelete }: AdminTableProps) {
                       } catch (error) {
                         const text = error instanceof Error ? error.message : 'Failed to delete mezmur.';
                         setMessage(text);
+                      } finally {
+                        setPendingRowId(null);
                       }
                     });
                   }}
