@@ -1,6 +1,6 @@
 # mezmur-lyrics
 
-Ethiopian Orthodox Tewahedo Hymn (Mezmur) lyrics management system with a Supabase backend and Next.js frontend.
+Eritrean Orthodox Tewahedo Hymn (Mezmur) lyrics management system with a Supabase backend and Next.js frontend.
 
 ## Prerequisites
 
