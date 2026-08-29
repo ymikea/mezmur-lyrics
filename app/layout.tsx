@@ -5,7 +5,7 @@ import { createClient } from '@/utils/supabase/server';
 
 export const metadata: Metadata = {
   title: 'Mezmur Lyrics',
-  description: 'Ethiopian Orthodox Tewahedo hymn lyrics management app',
+  description: 'Eritrean Orthodox Tewahedo hymn lyrics management app',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
