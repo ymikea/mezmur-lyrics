@@ -1,3 +1,5 @@
+Auther: Y.
+
 # mezmur-lyrics
 
 Eritrean Orthodox Tewahedo Hymn (Mezmur) lyrics management system with a Supabase backend and Next.js frontend.
