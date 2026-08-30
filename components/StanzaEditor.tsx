@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import { Stanza } from '@/types/database';
 import { renderStanzaText } from '@/utils/lyrics';
@@ -58,6 +58,14 @@ export default function StanzaEditor({ stanzas, onChange }: StanzaEditorProps) {
     });
   };
 
+  const setTextareaRef = useCallback((localId: string, el: HTMLTextAreaElement | null) => {
+    if (el) {
+      textareaRefs.current.set(localId, el);
+    } else {
+      textareaRefs.current.delete(localId);
+    }
+  }, []);
+
   return (
     <section style={{ display: 'grid', gap: 12 }}>
       <h2 style={{ fontSize: 18, fontWeight: 600 }}>Stanzas</h2>
@@ -69,13 +77,7 @@ export default function StanzaEditor({ stanzas, onChange }: StanzaEditorProps) {
         <div key={stanza.localId} className="card">
           <p className="card__meta">Stanza {stanza.stanza_order}</p>
           <textarea
-            ref={(el) => {
-              if (el) {
-                textareaRefs.current.set(stanza.localId, el);
-              } else {
-                textareaRefs.current.delete(stanza.localId);
-              }
-            }}
+            ref={(el) => setTextareaRef(stanza.localId, el)}
             className="input"
             value={stanza.text}
             onChange={(event) => updateStanza(stanza.localId, { text: event.target.value })}
