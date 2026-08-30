@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LANGUAGES, LITURGICAL_SEASONS, Language, LiturgicalSeason } from '@/types/database';
+import { LANGUAGES, LITURGICAL_SEASONS, Language, LiturgicalSeason, getGeezName } from '@/types/database';
 import { createClient } from '@/utils/supabase/client';
 import StanzaEditor, { EditableStanza, createEmptyStanza } from '@/components/StanzaEditor';
 
@@ -91,7 +91,7 @@ export default function SubmitPage() {
           >
             {LITURGICAL_SEASONS.map((value) => (
               <option key={value} value={value}>
-                {value}
+                {getGeezName(value)}
               </option>
             ))}
           </select>

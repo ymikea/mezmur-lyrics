@@ -3,27 +3,55 @@ export type Language = 'Tigrinya' | 'Geez' | 'Amharic' | 'English';
 export const LANGUAGES: Language[] = ['Tigrinya', 'Geez', 'Amharic','English'];
 
 export type LiturgicalSeason =
-  | 'Fast of the Prophets'
+  | 'General'
   | 'Nativity'
   | 'Epiphany'
   | 'Great Lent'
-  | 'Holy Week'
   | 'Resurrection'
+  | 'Ascension'
   | 'Pentecost'
-  | 'Assumption'
-  | 'General';
+  | 'St. Virgin Mary General'
+  | 'Tsgie'
+  | 'Holy Cross'
+  | 'Holy Angels'
+  | 'Holy Church'
+  | 'Holy Fathers';
 
 export const LITURGICAL_SEASONS: LiturgicalSeason[] = [
-  'Fast of the Prophets',
+  'General',
   'Nativity',
   'Epiphany',
   'Great Lent',
-  'Holy Week',
   'Resurrection',
+  'Ascension',
   'Pentecost',
-  'Assumption',
-  'General',
+  'St. Virgin Mary General',
+  'Tsgie',
+  'Holy Cross',
+  'Holy Angels',
+  'Holy Church',
+  'Holy Fathers',
 ];
+
+export const SEASON_GEEZ_NAMES: Record<LiturgicalSeason, string> = {
+  'General': 'ዘዘወትር',
+  'Nativity': 'ልደት',
+  'Epiphany': 'ጥምቀት',
+  'Great Lent': 'ዐብይ ጾም',
+  'Resurrection': 'ትንሳኤ',
+  'Ascension': 'ዕርገት',
+  'Pentecost': 'ጰራቅሊጦስ',
+  'St. Virgin Mary General': 'ቅ/ድንግል ማርያም ዘዘወትር',
+  'Tsgie': 'ጽጌ',
+  'Holy Cross': 'መስቀል',
+  'Holy Angels': 'ቅዱሳን መላእክት',
+  'Holy Church': 'ቤተ ክርስቲያን',
+  'Holy Fathers': 'ቅዱሳን አበው',
+};
+
+export function getGeezName(season: LiturgicalSeason): string {
+  return SEASON_GEEZ_NAMES[season] ?? season;
+}
 
 export type ReviewStatus = 'pending_review' | 'approved' | 'rejected';
 export type AppRole = 'admin' | 'moderator';

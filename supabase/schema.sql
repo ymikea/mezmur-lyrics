@@ -1,6 +1,6 @@
 -- 1. Create Enums
 CREATE TYPE mezmur_language AS ENUM ('Amharic', 'Tigrinya', 'Geez', 'Oromo', 'English');
-CREATE TYPE liturgical_season AS ENUM ('Fast of the Prophets', 'Nativity', 'Epiphany', 'Great Lent', 'Holy Week', 'Resurrection', 'Pentecost', 'Assumption', 'General');
+CREATE TYPE liturgical_season AS ENUM ('General', 'Nativity', 'Epiphany', 'Great Lent', 'Resurrection', 'Ascension', 'Pentecost', 'St. Virgin Mary General', 'Tsgie', 'Holy Cross', 'Holy Angels', 'Holy Church', 'Holy Fathers');
 CREATE TYPE review_status AS ENUM ('pending_review', 'approved', 'rejected');
 CREATE TYPE app_role AS ENUM ('admin', 'moderator');
 

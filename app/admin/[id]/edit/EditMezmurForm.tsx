@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LANGUAGES, LITURGICAL_SEASONS, Language, LiturgicalSeason, Mezmur } from '@/types/database';
+import { LANGUAGES, LITURGICAL_SEASONS, Language, LiturgicalSeason, Mezmur, getGeezName } from '@/types/database';
 import StanzaEditor, { EditableStanza } from '@/components/StanzaEditor';
 import { updateMezmur } from '../../actions';
 
@@ -94,7 +94,7 @@ export default function EditMezmurForm({ mezmur }: EditMezmurFormProps) {
         >
           {LITURGICAL_SEASONS.map((value) => (
             <option key={value} value={value}>
-              {value}
+              {getGeezName(value)}
             </option>
           ))}
         </select>
