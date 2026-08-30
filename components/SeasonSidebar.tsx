@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { LITURGICAL_SEASONS, LiturgicalSeason } from '@/types/database';
+import { LITURGICAL_SEASONS, LiturgicalSeason, getGeezName } from '@/types/database';
 
 interface SeasonSidebarProps {
   activeSeason?: LiturgicalSeason;
@@ -19,7 +19,7 @@ export default function SeasonSidebar({ activeSeason }: SeasonSidebarProps) {
             href={`/?season=${encodeURIComponent(season)}`}
             className={`sidebar__link${activeSeason === season ? ' sidebar__link--active' : ''}`}
           >
-            {season}
+            {getGeezName(season)}
           </Link>
         ))}
       </nav>
