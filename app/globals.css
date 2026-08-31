@@ -130,6 +130,10 @@ a {
   margin-top: 20px;
 }
 
+.library-content .language-tabs {
+  margin-top: 20px;
+}
+
 .language-tabs {
   display: flex;
   flex-wrap: wrap;

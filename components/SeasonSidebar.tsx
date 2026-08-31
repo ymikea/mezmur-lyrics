@@ -1,6 +1,6 @@
 'use client';
 
-import { LITURGICAL_SEASONS, LiturgicalSeason, getGeezName } from '@/types/database';
+import { LITURGICAL_SEASONS, LiturgicalSeason } from '@/types/database';
 
 interface SeasonSidebarProps {
   activeSeason: LiturgicalSeason | 'all';
@@ -21,7 +21,7 @@ export default function SeasonSidebar({ activeSeason, onSeasonChange }: SeasonSi
           <option value="all">All Seasons</option>
           {LITURGICAL_SEASONS.map((season) => (
             <option key={season} value={season}>
-              {getGeezName(season)}
+              {season}
             </option>
           ))}
         </select>

@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import SeasonSidebar from '@/components/SeasonSidebar';
-import { LiturgicalSeason, Mezmur } from '@/types/database';
+import { LANGUAGES, Language, LiturgicalSeason, Mezmur } from '@/types/database';
 
 interface PublicLibraryBrowserProps {
   mezmurs: Mezmur[];
@@ -13,6 +13,7 @@ interface PublicLibraryBrowserProps {
 export default function PublicLibraryBrowser({ mezmurs, defaultSeason }: PublicLibraryBrowserProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSeason, setSelectedSeason] = useState<LiturgicalSeason | 'all'>(defaultSeason);
+  const [selectedLanguage, setSelectedLanguage] = useState<Language | 'all'>('all');
 
   const filteredMezmurs = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
@@ -22,15 +23,40 @@ export default function PublicLibraryBrowser({ mezmurs, defaultSeason }: PublicL
         selectedSeason === 'all' || mezmur.liturgical_season === selectedSeason;
       const matchesTitle =
         normalizedQuery.length === 0 || mezmur.title.toLowerCase().includes(normalizedQuery);
+      const matchesLanguage = selectedLanguage === 'all' || mezmur.language === selectedLanguage;
 
-      return matchesSeason && matchesTitle;
+      return matchesSeason && matchesTitle && matchesLanguage;
     });
-  }, [mezmurs, searchQuery, selectedSeason]);
+  }, [mezmurs, searchQuery, selectedSeason, selectedLanguage]);
 
   return (
     <div className="library-layout">
       <SeasonSidebar activeSeason={selectedSeason} onSeasonChange={setSelectedSeason} />
       <div className="library-content">
+        <div className="language-tabs" role="tablist" aria-label="Filter mezmurs by language">
+          <button
+            type="button"
+            role="tab"
+            className={`language-tab${selectedLanguage === 'all' ? ' language-tab--active' : ''}`}
+            aria-selected={selectedLanguage === 'all'}
+            onClick={() => setSelectedLanguage('all')}
+          >
+            All Languages
+          </button>
+          {LANGUAGES.map((language) => (
+            <button
+              key={language}
+              type="button"
+              role="tab"
+              className={`language-tab${selectedLanguage === language ? ' language-tab--active' : ''}`}
+              aria-selected={selectedLanguage === language}
+              onClick={() => setSelectedLanguage(language)}
+            >
+              {language}
+            </button>
+          ))}
+        </div>
+
         <label className="field library-search">
           Search by title
           <input
