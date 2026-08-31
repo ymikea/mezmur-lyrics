@@ -7,7 +7,7 @@ import { LANGUAGES, Language, LiturgicalSeason, Mezmur } from '@/types/database'
 
 interface PublicLibraryBrowserProps {
   mezmurs: Mezmur[];
-  defaultSeason: LiturgicalSeason;
+  defaultSeason: LiturgicalSeason | 'all';
 }
 
 export default function PublicLibraryBrowser({ mezmurs, defaultSeason }: PublicLibraryBrowserProps) {
@@ -31,7 +31,11 @@ export default function PublicLibraryBrowser({ mezmurs, defaultSeason }: PublicL
 
   return (
     <div className="library-layout">
-      <SeasonSidebar activeSeason={selectedSeason} onSeasonChange={setSelectedSeason} />
+      <SeasonSidebar
+        activeSeason={selectedSeason}
+        onSeasonChange={setSelectedSeason}
+        showEnglishLabels={selectedLanguage === 'English'}
+      />
       <div className="library-content">
         <div className="language-tabs" role="tablist" aria-label="Filter mezmurs by language">
           <button

@@ -1,13 +1,18 @@
 'use client';
 
-import { LITURGICAL_SEASONS, LiturgicalSeason } from '@/types/database';
+import { LITURGICAL_SEASONS, LiturgicalSeason, getGeezName } from '@/types/database';
 
 interface SeasonSidebarProps {
   activeSeason: LiturgicalSeason | 'all';
   onSeasonChange: (season: LiturgicalSeason | 'all') => void;
+  showEnglishLabels: boolean;
 }
 
-export default function SeasonSidebar({ activeSeason, onSeasonChange }: SeasonSidebarProps) {
+export default function SeasonSidebar({
+  activeSeason,
+  onSeasonChange,
+  showEnglishLabels,
+}: SeasonSidebarProps) {
   return (
     <aside className="sidebar">
       <p className="sidebar__heading">Liturgical Seasons</p>
@@ -18,10 +23,10 @@ export default function SeasonSidebar({ activeSeason, onSeasonChange }: SeasonSi
           value={activeSeason}
           onChange={(event) => onSeasonChange(event.target.value as LiturgicalSeason | 'all')}
         >
-          <option value="all">All Seasons</option>
+          <option value="all">{showEnglishLabels ? 'All Seasons' : 'ኩሉ ወቅታት'}</option>
           {LITURGICAL_SEASONS.map((season) => (
             <option key={season} value={season}>
-              {season}
+              {showEnglishLabels ? season : getGeezName(season)}
             </option>
           ))}
         </select>
