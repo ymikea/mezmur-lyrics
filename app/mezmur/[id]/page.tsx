@@ -34,7 +34,9 @@ export default async function MezmurDetailPage({ params }: MezmurDetailPageProps
       mezmursByLanguage[item.language] = item;
     }
   });
-  mezmursByLanguage[mezmur.language] = mezmur;
+  if (!mezmursByLanguage[mezmur.language]) {
+    mezmursByLanguage[mezmur.language] = mezmur;
+  }
 
   return (
     <main className="container">

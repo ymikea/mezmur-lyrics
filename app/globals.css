@@ -91,6 +91,10 @@ a {
   flex: 1;
 }
 
+.library-content {
+  width: 100%;
+}
+
 .sidebar {
   width: 220px;
   flex-shrink: 0;

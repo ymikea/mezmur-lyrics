@@ -30,7 +30,7 @@ export default function PublicLibraryBrowser({ mezmurs, defaultSeason }: PublicL
   return (
     <div className="library-layout">
       <SeasonSidebar activeSeason={selectedSeason} onSeasonChange={setSelectedSeason} />
-      <div style={{ width: '100%' }}>
+      <div className="library-content">
         <label className="field library-search">
           Search by title
           <input

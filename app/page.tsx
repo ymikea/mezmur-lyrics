@@ -1,4 +1,4 @@
-import { Mezmur, LiturgicalSeason } from '@/types/database';
+import { LITURGICAL_SEASONS, LiturgicalSeason, Mezmur } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
 import PublicLibraryBrowser from '@/components/PublicLibraryBrowser';
 
@@ -10,7 +10,8 @@ interface PublicLibraryPageProps {
 
 export default async function PublicLibraryPage({ searchParams }: PublicLibraryPageProps) {
   const { reason, season } = await searchParams;
-  const defaultSeason: LiturgicalSeason = season ?? 'General';
+  const defaultSeason: LiturgicalSeason =
+    season && LITURGICAL_SEASONS.includes(season) ? season : 'General';
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return (
