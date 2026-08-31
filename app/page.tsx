@@ -5,13 +5,17 @@ import PublicLibraryBrowser from '@/components/PublicLibraryBrowser';
 export const revalidate = 60;
 
 interface PublicLibraryPageProps {
-  searchParams: Promise<{ reason?: string; season?: LiturgicalSeason }>;
+  searchParams: Promise<{ reason?: string; season?: string | string[] }>;
 }
 
 export default async function PublicLibraryPage({ searchParams }: PublicLibraryPageProps) {
   const { reason, season } = await searchParams;
+  const validSeason =
+    typeof season === 'string' && LITURGICAL_SEASONS.includes(season as LiturgicalSeason)
+      ? (season as LiturgicalSeason)
+      : null;
   const defaultSeason: LiturgicalSeason =
-    season && LITURGICAL_SEASONS.includes(season) ? season : 'General';
+    validSeason ?? 'General';
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return (
