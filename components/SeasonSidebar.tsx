@@ -1,28 +1,31 @@
-import Link from 'next/link';
+'use client';
+
 import { LITURGICAL_SEASONS, LiturgicalSeason, getGeezName } from '@/types/database';
 
 interface SeasonSidebarProps {
-  activeSeason?: LiturgicalSeason;
+  activeSeason: LiturgicalSeason | 'all';
+  onSeasonChange: (season: LiturgicalSeason | 'all') => void;
 }
 
-export default function SeasonSidebar({ activeSeason }: SeasonSidebarProps) {
+export default function SeasonSidebar({ activeSeason, onSeasonChange }: SeasonSidebarProps) {
   return (
     <aside className="sidebar">
       <p className="sidebar__heading">Liturgical Seasons</p>
-      <nav className="sidebar__links">
-        <Link href="/" className={`sidebar__link${!activeSeason ? ' sidebar__link--active' : ''}`}>
-          All Seasons
-        </Link>
-        {LITURGICAL_SEASONS.map((season) => (
-          <Link
-            key={season}
-            href={`/?season=${encodeURIComponent(season)}`}
-            className={`sidebar__link${activeSeason === season ? ' sidebar__link--active' : ''}`}
-          >
-            {getGeezName(season)}
-          </Link>
-        ))}
-      </nav>
+      <label className="field">
+        <span className="visually-hidden">Select liturgical season</span>
+        <select
+          className="input"
+          value={activeSeason}
+          onChange={(event) => onSeasonChange(event.target.value as LiturgicalSeason | 'all')}
+        >
+          <option value="all">All Seasons</option>
+          {LITURGICAL_SEASONS.map((season) => (
+            <option key={season} value={season}>
+              {getGeezName(season)}
+            </option>
+          ))}
+        </select>
+      </label>
     </aside>
   );
 }

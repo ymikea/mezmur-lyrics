@@ -102,13 +102,68 @@ a {
 }
 
 .sidebar__heading {
-  padding: 0 12px;
   margin-bottom: 8px;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.library-search {
+  margin-top: 20px;
+}
+
+.language-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.language-tab {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.language-tab:hover:not(:disabled) {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.language-tab:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.language-tab--active {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.sidebar .field {
+  color: var(--foreground);
+}
+
+.sidebar select.input {
+  width: 100%;
 }
 
 .sidebar__links {
