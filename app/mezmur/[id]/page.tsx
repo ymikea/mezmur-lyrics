@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Mezmur } from '@/types/database';
+import { LANGUAGES, Language, Mezmur } from '@/types/database';
 import { createClient } from '@/utils/supabase/server';
-import { renderStanzaText } from '@/utils/lyrics';
+import MezmurLanguageTabs from '@/components/MezmurLanguageTabs';
 
 interface MezmurDetailPageProps {
   params: Promise<{ id: string }>;
@@ -20,7 +20,23 @@ export default async function MezmurDetailPage({ params }: MezmurDetailPageProps
     notFound();
   }
 
-  const stanzas = [...mezmur.lyrics].sort((a, b) => a.stanza_order - b.stanza_order);
+  const { data: relatedMezmurs } = await supabase
+    .from('mezmurs')
+    .select('*')
+    .eq('status', 'approved')
+    .eq('title', mezmur.title)
+    .order('updated_at', { ascending: false });
+
+  const mezmursByLanguage: Partial<Record<Language, Mezmur>> = {};
+
+  ((relatedMezmurs as Mezmur[]) || []).forEach((item) => {
+    if (LANGUAGES.includes(item.language) && !mezmursByLanguage[item.language]) {
+      mezmursByLanguage[item.language] = item;
+    }
+  });
+  if (!mezmursByLanguage[mezmur.language]) {
+    mezmursByLanguage[mezmur.language] = mezmur;
+  }
 
   return (
     <main className="container">
@@ -31,19 +47,8 @@ export default async function MezmurDetailPage({ params }: MezmurDetailPageProps
       <h1 className="page-title" style={{ marginTop: 12 }}>
         {mezmur.title}
       </h1>
-      <p className="card__meta">
-        {mezmur.language} • {mezmur.liturgical_season}
-      </p>
-
-      <section className="card" style={{ marginTop: 24 }}>
-        {stanzas.map((stanza, index) => (
-          <div
-            key={index}
-            className={`stanza${stanza.is_chorus ? ' stanza--chorus' : ''}`}
-          >
-            <p>{renderStanzaText(stanza.text)}</p>
-          </div>
-        ))}
+      <section style={{ marginTop: 24 }}>
+        <MezmurLanguageTabs mezmursByLanguage={mezmursByLanguage} defaultLanguage={mezmur.language} />
       </section>
     </main>
   );
