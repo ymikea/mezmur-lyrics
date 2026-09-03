@@ -29,7 +29,7 @@ export default async function AdminPage() {
   const { data } = await supabase
     .from('mezmurs')
     .select('*')
-    .order('created_at', { ascending: false });
+    .order('updated_at', { ascending: false });
 
   const mezmurs = (data as Mezmur[]) || [];
 

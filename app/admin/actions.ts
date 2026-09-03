@@ -30,10 +30,9 @@ const ensureStaff = async () => {
 export async function updateMezmurStatus(id: string, status: ReviewStatus) {
   const { supabase } = await ensureStaff();
 
-  const { error } = await supabase
-    .from('mezmurs')
-    .update({ status, updated_at: new Date().toISOString() })
-    .eq('id', id);
+  // Status-only changes intentionally don't bump updated_at so the admin
+  // list stays sorted by last *content* edit, not review activity.
+  const { error } = await supabase.from('mezmurs').update({ status }).eq('id', id);
 
   if (error) {
     throw new Error(error.message);
@@ -70,9 +69,26 @@ export interface UpdateMezmurInput {
 export async function updateMezmur(id: string, input: UpdateMezmurInput) {
   const { supabase } = await ensureStaff();
 
+  const { data: existing, error: fetchError } = await supabase
+    .from('mezmurs')
+    .select('title, language, liturgical_season, lyrics')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (fetchError) {
+    throw new Error(fetchError.message);
+  }
+
+  const contentChanged =
+    !existing ||
+    existing.title !== input.title ||
+    existing.language !== input.language ||
+    existing.liturgical_season !== input.liturgical_season ||
+    JSON.stringify(existing.lyrics) !== JSON.stringify(input.lyrics);
+
   const { error } = await supabase
     .from('mezmurs')
-    .update({ ...input, updated_at: new Date().toISOString() })
+    .update(contentChanged ? { ...input, updated_at: new Date().toISOString() } : { ...input })
     .eq('id', id);
 
   if (error) {
